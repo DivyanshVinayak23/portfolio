@@ -1,0 +1,19 @@
+---
+import PageLayout from "@/layouts/Base.astro";
+import SocialList from "@/components/SocialList.astro";
+
+const meta = {
+	description: "About me",
+	title: "About",
+};
+---
+
+<PageLayout meta={meta}>
+	<h1 class="title mb-12">About</h1>
+	<div class="prose prose-sm prose-cactus max-w-none">
+		<p>reach out to me.</p>
+	</div>
+	<div class="mt-8">
+		<SocialList />
+	</div>
+</PageLayout>

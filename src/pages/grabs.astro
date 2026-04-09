@@ -1,0 +1,50 @@
+---
+import PageLayout from "@/layouts/Base.astro";
+import { Image } from "astro:assets";
+
+import img1 from "../img/original_191f41dc204dcc8572593dcc2aa8a0e1.png";
+import img2 from "../img/original_244b7c4cc873b0380ee4df5c465c166f.png";
+import img3 from "../img/original_60ff770d50bb8ccc4e4cf1c2eb788e39.png";
+import img4 from "../img/original_9a2104e83952d83f04f4eae9008f9818.png";
+
+const meta = {
+	description: "A collection of cool pictures I've found.",
+	title: "/grabs",
+};
+---
+
+<PageLayout meta={meta}>
+	<h1 class="title mb-6">/grabs</h1>
+	<p class="mb-8">cool pictures</p>
+
+	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+		<div class="overflow-hidden rounded-lg">
+			<Image
+				src={img1}
+				alt="Grab 1"
+				class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+			/>
+		</div>
+		<div class="overflow-hidden rounded-lg">
+			<Image
+				src={img2}
+				alt="Grab 2"
+				class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+			/>
+		</div>
+		<div class="overflow-hidden rounded-lg">
+			<Image
+				src={img3}
+				alt="Grab 3"
+				class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+			/>
+		</div>
+		<div class="overflow-hidden rounded-lg">
+			<Image
+				src={img4}
+				alt="Grab 4"
+				class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+			/>
+		</div>
+	</div>
+</PageLayout>

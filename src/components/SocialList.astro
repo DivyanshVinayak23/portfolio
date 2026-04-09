@@ -1,0 +1,61 @@
+---
+import { Icon } from "astro-icon/components";
+
+/** 
+	Uses https://www.astroicon.dev/getting-started/
+	Find icons via guide: https://www.astroicon.dev/guides/customization/#open-source-icon-sets
+	Installed packs: @iconify-json/mdi, @iconify-json/simple-icons
+*/
+const socialLinks: {
+	friendlyName: string;
+	isWebmention?: boolean;
+	link: string;
+	name: string;
+}[] = [
+	{
+		friendlyName: "Github",
+		link: "https://github.com/DivyanshVinayak23",
+		name: "simple-icons:github",
+	},
+	{
+		friendlyName: "LinkedIn",
+		link: "https://www.linkedin.com/in/divyanshvinayak23/",
+		name: "simple-icons:linkedin",
+	},
+	{
+		friendlyName: "LeetCode",
+		link: "https://leetcode.com/u/divyansh_v/",
+		name: "simple-icons:leetcode",
+	},
+	{
+		friendlyName: "Spotify",
+		link: "https://open.spotify.com/user/s50udxazbyrr71e8mn68utroz",
+		name: "simple-icons:spotify",
+	},
+	{
+		friendlyName: "Letterboxd",
+		link: "https://letterboxd.com/divyanshv/",
+		name: "simple-icons:letterboxd",
+	},
+];
+---
+
+{
+	socialLinks.length > 0 && (
+		<ul class="flex items-center gap-x-4 sm:flex-initial">
+			{socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
+				<li class="flex">
+					<a
+						class="inline-block hover:text-link"
+						href={link}
+						rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
+						target="_blank"
+					>
+						<Icon aria-hidden="true" class="h-5 w-5 sm:h-4 sm:w-4" focusable="false" name={name} />
+						<span class="sr-only">{friendlyName}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	)
+}

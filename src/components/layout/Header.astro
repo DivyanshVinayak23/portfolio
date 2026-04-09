@@ -1,0 +1,126 @@
+---
+import Search from "@/components/Search.astro";
+import ThemeToggle from "@/components/ThemeToggle.astro";
+import { menuLinks } from "@/site.config";
+import { siteConfig } from "../../site.config";
+---
+
+<header class="group relative mb-28 flex items-center sm:ps-18" id="main-header">
+	<div class="flex sm:flex-col">
+		<a
+			aria-current={Astro.url.pathname === "/" ? "page" : false}
+			class="inline-flex items-center sm:relative sm:inline-block sm:grayscale sm:hover:filter-none"
+			href="/"
+		>
+			<svg
+				aria-hidden="true"
+				class="logo me-3 h-10 w-6 sm:absolute sm:-start-18 sm:me-0 sm:h-20 sm:w-12"
+				viewBox="0 0 32 32"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<g fill="currentColor">
+					<path d="M25,30c-1.103,0-2-0.897-2-2c0-0.552-0.449-1-1-1s-1,0.448-1,1c0,1.103-0.897,2-2,2s-2-0.897-2-2 c0-0.552-0.449-1-1-1s-1,0.448-1,1c0,1.103-0.897,2-2,2s-2-0.897-2-2c0-0.552-0.449-1-1-1s-1,0.448-1,1c0,1.103-0.897,2-2,2 c-0.276,0-0.5-0.224-0.5-0.5S6.724,29,7,29c0.551,0,1-0.448,1-1c0-1.103,0.897-2,2-2s2,0.897,2,2c0,0.552,0.449,1,1,1s1-0.448,1-1 c0-1.103,0.897-2,2-2s2,0.897,2,2c0,0.552,0.449,1,1,1s1-0.448,1-1c0-1.103,0.897-2,2-2s2,0.897,2,2c0,0.552,0.449,1,1,1 s1-0.448,1-1V13c0-2.705-1.063-5.239-2.994-7.136c-1.93-1.895-4.468-2.896-7.193-2.862C10.402,3.101,6,7.742,6,13.349V26.5 C6,26.776,5.776,27,5.5,27S5,26.776,5,26.5V13.349C5,7.201,9.842,2.11,15.794,2.002c2.999-0.051,5.789,1.063,7.913,3.149 C25.831,7.236,27,10.024,27,13v15C27,29.103,26.103,30,25,30z"/>
+					<circle cx="13.5" cy="13.5" r="0.5"/>
+					<circle cx="18.5" cy="13.5" r="0.5"/>
+				</g>
+			</svg>
+			<span class="text-xl font-bold sm:text-2xl">{siteConfig.title}</span>
+		</a>
+		<nav
+			aria-label="Main menu"
+			class="bg-global-bg absolute -inset-x-4 top-12 hidden flex-col divide-y px-2 py-4 group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:-ms-4 sm:mt-1 sm:flex sm:flex-row sm:divide-x sm:divide-y-0 sm:bg-transparent sm:p-0"
+			id="navigation-menu"
+		>
+			{
+				menuLinks.map((link) => (
+					<a
+						aria-current={Astro.url.pathname === link.path ? "page" : false}
+						class="text-accent px-2 py-4 font-semibold sm:px-4 sm:py-0 sm:underline-offset-2 sm:hover:underline"
+						href={link.path}
+					>
+						{link.title}
+					</a>
+				))
+			}
+		</nav>
+	</div>
+	<Search />
+	<ThemeToggle />
+	<mobile-button>
+		<button
+			aria-expanded="false"
+			aria-haspopup="menu"
+			class="group relative ms-4 h-7 w-7 sm:invisible sm:hidden"
+			id="toggle-navigation-menu"
+			type="button"
+		>
+			<span class="sr-only">Open main menu</span>
+			<svg
+				aria-hidden="true"
+				class="absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transition-all group-aria-expanded:scale-0 group-aria-expanded:opacity-0"
+				fill="none"
+				focusable="false"
+				id="line-svg"
+				stroke="currentColor"
+				stroke-width="1.5"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path d="M3.75 9h16.5m-16.5 6.75h16.5" stroke-linecap="round" stroke-linejoin="round"
+				></path>
+			</svg>
+			<svg
+				aria-hidden="true"
+				class="text-accent absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
+				class="text-accent"
+				fill="none"
+				focusable="false"
+				id="cross-svg"
+				stroke="currentColor"
+				stroke-width="1.5"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+			</svg>
+		</button>
+	</mobile-button>
+</header>
+
+<script>
+	import { toggleClass } from "@/utils/domElement";
+
+	class MobileNavBtn extends HTMLElement {
+		#menuOpen: boolean = false;
+
+		connectedCallback() {
+			const headerEl = document.getElementById("main-header")!;
+			const mobileButtonEl = this.querySelector<HTMLButtonElement>("button");
+
+			mobileButtonEl?.addEventListener("click", () => {
+				if (headerEl) toggleClass(headerEl, "menu-open");
+				this.#menuOpen = !this.#menuOpen;
+				mobileButtonEl.setAttribute("aria-expanded", this.#menuOpen.toString());
+			});
+		}
+	}
+
+	customElements.define("mobile-button", MobileNavBtn);
+</script>
+
+<style>
+	.logo {
+		color: #e8a5b2; /* Indie Mazzy Star Pink */
+		transition: transform 0.25s ease, stroke-width 0.25s ease, opacity 0.25s ease;
+	}
+
+	:global([data-theme="light"]) .logo {
+		stroke: #111;
+		stroke-width: 0.8px;
+	}
+
+	.logo:hover {
+		transform: scale(1.08) rotate(-2deg);
+		opacity: 0.85;
+	}
+</style>
