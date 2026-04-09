@@ -193,3 +193,8 @@ Remember the pizza analogy? "I want a pepperoni pizza" and the chef disappears b
 Picking up this challenge a few months ago, I could have sworn this blog would never get written. But here's what I can tell you from the other side: the magic is real — it's just held together by some terrifying `reinterpret_cast`s, a fencepost principle that haunts your dreams, and a `+1` on a child pointer array that is always correct and never fully trustworthy.
 
 Every database you've ever used is just a much older, much more battle-tested version of what was built here. Same ideas. Same cascading splits. Just with decades of people finding all the ways it could go wrong, and quietly fixing them.
+
+---
+
+**You can check out the full source code here:**  
+[DivyanshVinayak23/keyValueDatabase](https://github.com/DivyanshVinayak23/keyValueDatabase)
