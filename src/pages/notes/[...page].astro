@@ -49,10 +49,10 @@ const paginationProps = {
 				<Icon aria-hidden="true" class="h-6 w-6" focusable="false" name="mdi:rss" />
 			</a>
 		</h1>
-		<ul class="mt-6 space-y-8 text-start">
+		<ul class="mt-6 flex flex-wrap gap-4 text-start">
 			{
 				page.data.map((note) => (
-					<li class="">
+					<li>
 						<Note note={note} as="h2" isPreview />
 					</li>
 				))
