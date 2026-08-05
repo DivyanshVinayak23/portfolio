@@ -1,0 +1,93 @@
+---
+// SpotifyPlayer.astro
+---
+<div class="spotify-container not-prose border border-accent/20 bg-global-bg/50 backdrop-blur-sm rounded-lg p-3 flex items-center gap-3 w-full mx-auto my-2 transition-all shadow-sm">
+  <div class="relative w-10 h-10 flex-shrink-0">
+    <img id="spotify-album-art" src="/icon.svg" alt="Album Art" class="rounded-md w-full h-full object-cover opacity-50 grayscale transition-all duration-500" />
+    <div id="spotify-eq" class="absolute bottom-1 right-1 hidden gap-[2px] h-3 items-end">
+        <span class="w-[3px] bg-accent h-full animate-[bounce_1s_infinite]"></span>
+        <span class="w-[3px] bg-accent h-full animate-[bounce_1.2s_infinite]"></span>
+        <span class="w-[3px] bg-accent h-full animate-[bounce_0.8s_infinite]"></span>
+    </div>
+  </div>
+  
+  <div class="flex flex-col flex-grow min-w-0">
+    <div class="flex items-center justify-between gap-2">
+      <a id="spotify-title" href="#" target="_blank" rel="noopener noreferrer" class="text-global-text font-semibold text-sm truncate hover:text-accent transition-colors">
+        Not Playing
+      </a>
+      <svg id="spotify-icon" class="w-4 h-4 text-muted flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.47-.077-.334.132-.67.47-.745 3.808-.87 7.076-.496 9.712 1.115.293.18.386.563.207.856zm1.226-2.738c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.13-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.52-.973 3.632-1.102 8.147-.568 11.234 1.328.366.226.48.706.256 1.07zm.106-2.893c-3.195-1.895-8.452-2.072-11.533-1.146-.5.15-1.022-.132-1.173-.633-.15-.502.132-1.022.634-1.173 3.51-1.055 9.324-.847 13.003 1.336.453.268.604.863.336 1.316-.268.453-.863.604-1.316.336z"/>
+      </svg>
+    </div>
+    <span id="spotify-artist" class="text-xs text-muted truncate">Spotify</span>
+  </div>
+</div>
+
+<script>
+  let intervalId: NodeJS.Timeout;
+  const DISCORD_ID = "284172135612809216";
+  const LANYARD_API = `https://api.lanyard.rest/v1/users/${DISCORD_ID}`;
+
+  const updateSpotifyStatus = async () => {
+    try {
+      const res = await fetch(LANYARD_API);
+      if (!res.ok) return;
+      const json = await res.json();
+      
+      const spotify = json.data?.spotify;
+      const isPlaying = json.data?.listening_to_spotify && spotify;
+
+      const albumArt = document.getElementById('spotify-album-art') as HTMLImageElement;
+      const title = document.getElementById('spotify-title') as HTMLAnchorElement;
+      const artist = document.getElementById('spotify-artist');
+      const icon = document.getElementById('spotify-icon');
+      const eq = document.getElementById('spotify-eq');
+
+      if (!albumArt || !title || !artist || !icon || !eq) return;
+
+      if (isPlaying) {
+        albumArt.src = spotify.album_art_url;
+        albumArt.classList.remove('opacity-50', 'grayscale');
+        title.textContent = spotify.song;
+        // Construct track URL using track_id if available
+        title.href = spotify.track_id ? `https://open.spotify.com/track/${spotify.track_id}` : '#';
+        artist.textContent = spotify.artist;
+        icon.classList.add('text-[#1DB954]'); // Spotify green
+        icon.classList.remove('text-muted');
+        eq.classList.remove('hidden');
+        eq.classList.add('flex');
+      } else {
+        albumArt.src = '/icon.svg'; // Default icon/image
+        albumArt.classList.add('opacity-50', 'grayscale');
+        title.textContent = 'Not Playing';
+        title.href = '#';
+        title.removeAttribute('target');
+        artist.textContent = 'Spotify';
+        icon.classList.remove('text-[#1DB954]');
+        icon.classList.add('text-muted');
+        eq.classList.add('hidden');
+        eq.classList.remove('flex');
+      }
+    } catch (e) {
+      console.error('Failed to fetch Spotify data from Lanyard', e);
+    }
+  };
+
+  // Run on mount
+  updateSpotifyStatus();
+  
+  // Update every 10 seconds
+  intervalId = setInterval(updateSpotifyStatus, 10000);
+
+  // Cleanup if astro swaps pages (view transitions)
+  document.addEventListener('astro:before-swap', () => {
+    clearInterval(intervalId);
+  });
+  
+  document.addEventListener('astro:page-load', () => {
+      updateSpotifyStatus();
+      clearInterval(intervalId); // clear any existing just in case
+      intervalId = setInterval(updateSpotifyStatus, 10000);
+  });
+</script>
